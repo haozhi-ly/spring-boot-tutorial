@@ -19,4 +19,14 @@ public class SpringBootPropertiesTest {
 		PageInfo<Good> list = goodService.page(null,1,10);
 		System.out.println(list.getList());
 	}
+	@Test
+	public void a(){
+		PageInfo<Good> list = goodService.page(null,1,10);
+		System.out.println(list.getList());
+	}
+	@Test
+	public void b(){
+		PageInfo<Good> list = goodService.page(null,1,10);
+		System.out.println(list.getList());
+	}
 }	
