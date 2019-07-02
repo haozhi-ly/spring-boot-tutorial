@@ -19,6 +19,9 @@ import java.util.List;
  **/
 @Service("goodService")
 public class GoodServiceImpl implements GoodService{
+    /**
+     * 商品mapper
+     */
     @Autowired
     private GoodMapper goodMapper;
 
@@ -53,4 +56,5 @@ public class GoodServiceImpl implements GoodService{
         List<Good> list = goodMapper.selectAll();
         return new PageInfo<>(list);
     }
+
 }
