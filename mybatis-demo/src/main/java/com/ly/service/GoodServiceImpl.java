@@ -50,6 +50,13 @@ public class GoodServiceImpl implements GoodService{
         return 0;
     }
 
+    /**
+     * are you ok
+     * @param good
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     @Override
     public PageInfo<Good> page(Good good,int pageNumber,int pageSize) {
         PageHelper.startPage(pageNumber,pageSize);
