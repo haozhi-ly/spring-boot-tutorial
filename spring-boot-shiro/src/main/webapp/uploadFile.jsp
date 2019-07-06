@@ -55,8 +55,8 @@
         <button type="button" id="button" class="btn-default btn">提交</button>
     </form>
     
-    <div>
-        <img src="../upload/156190793912634915.png">
+    <div class="row" id="showImg">
+
     </div>
     
 </div>
@@ -79,7 +79,7 @@
             {
                 url: basePath+"/upload/image", //用于文件上传的服务器端请求地址
                 type: 'post',
-                //data: { "": gameId },
+                data: { "name": "ly" },
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'file', //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
@@ -87,6 +87,9 @@
                 {
                     if(data.state == 0){
                         alert("上传成功：filename:"+data.fileName);
+
+                        var str = "<dl><dt><img  src='"+basePath+"/upload/"+data.fileName+"'/></dt><dd>"+data.fileName+"</dd></dl>";
+                        $("#showImg").append(str);
                     }
                 },
                 error: function (data, status, e)//服务器响应失败处理函数

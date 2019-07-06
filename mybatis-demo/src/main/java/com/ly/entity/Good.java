@@ -1,10 +1,7 @@
 package com.ly.entity;
 
-import lombok.ToString;
-
 import java.util.Date;
 
-@ToString
 public class Good {
     private Integer id;
 
@@ -64,5 +61,17 @@ public class Good {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Good{" +
+                "id=" + id +
+                ", gname='" + gname + '\'' +
+                ", serialnumber='" + serialnumber + '\'' +
+                ", price=" + price +
+                ", stockNumber=" + stockNumber +
+                ", createTime=" + createTime +
+                '}';
     }
 }

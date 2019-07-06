@@ -32,8 +32,9 @@ public class UploadController {
 
     @ResponseBody
     @RequestMapping("image")
-    public Map<String,Object> uploadImage(@RequestParam("file") MultipartFile m,
+    public Map<String,Object> uploadImage(@RequestParam("file") MultipartFile m,String name,
                                           HttpServletRequest request){
+
         Map<String,Object> result = new HashMap<>();
         String realPath = request.getServletContext().getRealPath("/");
         String parentPath = realPath+"/upload";
