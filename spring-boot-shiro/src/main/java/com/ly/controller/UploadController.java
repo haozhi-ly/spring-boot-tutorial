@@ -58,6 +58,39 @@ public class UploadController {
         result.put("state",state);
         result.put("fileName",fileName);
 
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("file")
+    public Map<String,Object> file(@RequestParam("file") MultipartFile m,String name,
+                                          HttpServletRequest request){
+
+        Map<String,Object> result = new HashMap<>();
+        String realPath = request.getServletContext().getRealPath("/");
+        request.getContextPath();
+        request.getServletPath();
+        String parentPath = realPath+"/upload";
+        File parentFile = new File(parentPath);
+        if(!parentFile.exists()){
+            parentFile.mkdir();
+        }
+        String originalFilename = m.getOriginalFilename();
+
+        // 新的图片名称
+        String fileName = new Date().getTime()+""+new Random().nextInt(100000)
+                +originalFilename.substring(originalFilename.lastIndexOf("."));
+        File targetFile = new File(parentFile,fileName);
+        int state = 0;
+        try {
+            m.transferTo(targetFile);
+        } catch (IOException e) {
+            state = 1;
+            logger.error(e.getMessage());
+        }
+        result.put("state",state);
+        result.put("originalFilename",originalFilename);
+        result.put("fileName",fileName);
 
         return result;
     }
