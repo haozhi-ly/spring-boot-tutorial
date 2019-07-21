@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ly.dao.PremissionMapper" >
-  <resultMap id="BaseResultMap" type="com.ly.entity.Premission" >
+<mapper namespace="com.ly.dao.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.ly.entity.Permission" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -15,7 +15,7 @@
     delete from premission
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ly.entity.Premission" >
+  <insert id="insert" parameterType="com.ly.entity.Permission" >
     insert into premission (id, parent_id, `name`, 
       url, `type`, order_num, 
       has_delete, create_time)
@@ -23,7 +23,7 @@
       #{url,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, 
       #{hasDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.ly.entity.Premission" >
+  <update id="updateByPrimaryKey" parameterType="com.ly.entity.Permission" >
     update premission
     set parent_id = #{parentId,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
@@ -43,4 +43,43 @@
     select id, parent_id, `name`, url, `type`, order_num, has_delete, create_time
     from premission
   </select>
+
+
+  <resultMap id="getPermissionTreeMap" type="com.ly.entity.Permission" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="has_delete" property="hasDelete" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="childrenPermission" javaType="ArrayList" ofType="Permission"
+     column="parentId=id,rid=currentRid" select="queryPermissionByPermission"/>
+
+  </resultMap>
+
+  <select id="getPermissionTree" resultMap="getPermissionTreeMap" >
+    select p.*,rp.id rpId,#{id} currentRid from permission  p  left join
+    (select * from role_permission where role_id = #{id} ) rp
+    on p.id = rp.pid where p.parent_id = 0
+  </select>
+
+  <select id="queryPermissionByPermission" parameterType="Permission" resultType="Permission">
+    select p.*,rp.id rpId from permission  p  left join
+    (select * from role_permission where role_id = #{rid} ) rp
+    on p.id = rp.pid
+    <where>
+        <if test="parentId != null">
+           p.parent_id =#{parentId}
+        </if>
+
+        <if test="ids != null and ids != ''">
+           p.id in (${ids})
+        </if>
+
+    </where>
+  </select>
+
+
 </mapper>

@@ -1,16 +1,16 @@
 package com.ly.dao;
 
-import com.ly.entity.RolePremission;
+import com.ly.entity.RolePermission;
 import java.util.List;
 
 public interface RolePremissionMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(RolePremission record);
+    int insert(RolePermission record);
 
-    RolePremission selectByPrimaryKey(Long id);
+    RolePermission selectByPrimaryKey(Long id);
 
-    List<RolePremission> selectAll();
+    List<RolePermission> selectAll();
 
-    int updateByPrimaryKey(RolePremission record);
+    int updateByPrimaryKey(RolePermission record);
 }

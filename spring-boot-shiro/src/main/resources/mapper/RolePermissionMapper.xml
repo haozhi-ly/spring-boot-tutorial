@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ly.dao.RolePremissionMapper" >
-  <resultMap id="BaseResultMap" type="com.ly.entity.RolePremission" >
+<mapper namespace="com.ly.entity.RolePermission" >
+  <resultMap id="BaseResultMap" type="com.ly.entity.RolePermission" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="role_id" property="roleId" jdbcType="BIGINT" />
     <result column="pid" property="pid" jdbcType="BIGINT" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from role_premission
+    delete from role_permission
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ly.entity.RolePremission" >
-    insert into role_premission (id, role_id, pid)
+  <insert id="insert" parameterType="com.ly.entity.RolePermission" >
+    insert into role_permission (id, role_id, pid)
     values (#{id,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.ly.entity.RolePremission" >
-    update role_premission
+  <update id="updateByPrimaryKey" parameterType="com.ly.entity.RolePermission" >
+    update role_permission
     set role_id = #{roleId,jdbcType=BIGINT},
       pid = #{pid,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select id, role_id, pid
-    from role_premission
+    from role_permission
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select id, role_id, pid
-    from role_premission
+    from role_permission
   </select>
 </mapper>

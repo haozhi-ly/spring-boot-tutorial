@@ -101,7 +101,7 @@
     </div>--%>
 
 
-    <div class="modal fade" id="theSecondModal" tabindex="-1" role="dialog" aria-labelledby="theSecondModalLabel" aria-hidden="true">
+    <div class="modal fade" id="theSecondModal" tabindex="-1" style="z-index: 2000" role="dialog" aria-labelledby="theSecondModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -109,17 +109,44 @@
                         &times;
                     </button>
                     <h4 class="modal-title" id="theSecondModalLabel">
-                        模态框（Modal）标题
+                        添加权限
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <div>我是模态框</div>
+
+                    <form class="form-horizontal" id="addPremisionForm" >
+
+                        <div class="form-group">
+                            <label for="parentName" class="col-sm-2 control-label">父菜单名</label>
+                            <div class="col-sm-10">
+                                <input type="text"  class="form-control" id="parentName" placeholder="父菜单名">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="permissionName" class="col-sm-2 control-label">权限名</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" class="form-control" id="permissionName" placeholder="权限名">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="addUrl" class="col-sm-2 control-label">权限URL</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="url" class="form-control" id="addUrl" placeholder="url">
+                            </div>
+                        </div>
+
+
+                    </form>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
-                    <button type="button" class="btn btn-primary">
-                        提交更改
+                    <button type="button" class="btn btn-primary" onclick="addPermission">
+                        保存
                     </button>
                 </div>
             </div><!-- /.modal-content -->
@@ -163,59 +190,27 @@
 </body>
 <script type="text/javascript">
 
-    var setting = {	};
+    var setting = {
+        view: {
+            selectedMulti: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
 
-    var zNodes =[
-        { name:"父节点1 - 展开", open:true,
-            children: [
-                { name:"父节点11 - 折叠",
-                    children: [
-                        { name:"叶子节点111"},
-                        { name:"叶子节点112"},
-                        { name:"叶子节点113"},
-                        { name:"叶子节点114"}
-                    ]},
-                { name:"父节点12 - 折叠",
-                    children: [
-                        { name:"叶子节点121"},
-                        { name:"叶子节点122"},
-                        { name:"叶子节点123"},
-                        { name:"叶子节点124"}
-                    ]},
-                { name:"父节点13 - 没有子节点", isParent:true}
-            ]},
-        { name:"父节点2 - 折叠",
-            children: [
-                { name:"父节点21 - 展开", open:true,
-                    children: [
-                        { name:"叶子节点211"},
-                        { name:"叶子节点212"},
-                        { name:"叶子节点213"},
-                        { name:"叶子节点214"}
-                    ]},
-                { name:"父节点22 - 折叠",
-                    children: [
-                        { name:"叶子节点221"},
-                        { name:"叶子节点222"},
-                        { name:"叶子节点223"},
-                        { name:"叶子节点224"}
-                    ]},
-                { name:"父节点23 - 折叠",
-                    children: [
-                        { name:"叶子节点231"},
-                        { name:"叶子节点232"},
-                        { name:"叶子节点233"},
-                        { name:"叶子节点234"}
-                    ]}
-            ]},
-        { name:"父节点3 - 没有子节点", isParent:true}
+        }
+    };
 
-    ];
 
 
     $('#roleJqGrid').on('click', 'a[attr="link"]', function(e) {
         $('#myModal').modal('show');
     });
+
+   /*
 
     $('#myModal').on('show.bs.modal', function () {
         alert("显示模态框");
@@ -223,7 +218,7 @@
 
     $('#myModal').on('hide.bs.modal', function () {
         alert("隐藏模态框");
-    });
+    });*/
 
 
     $(function () {
@@ -261,16 +256,33 @@
                 order: "order"
             },*/
         });
-        function operation_formatter(cellValue,grid, rows, state) {
-            var str = '<a attr="link">编辑权限</a>';
-            return str;
-        }
+
 
     });
 
     $(document).ready(function(){
-        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        getPermissionTree();
     });
+
+    function getPermissionTree() {
+        $.ajax({
+            async : true,    //表示请求是否异步处理
+            type : "post",    //请求类型
+            url : basePath+"/permission/getPermissionTree",
+            dataType : "json",//返回的数据类型
+            success: function (data) {
+                $.fn.zTree.init($("#treeDemo"), setting, data);
+            },
+            error:function (data) {
+                alert(data.result);
+            }
+        });
+    };
+
+    function operation_formatter(cellValue,grid, rows, state) {
+        var str = '<a attr="link">编辑权限</a>';
+        return str;
+    }
 
 
 

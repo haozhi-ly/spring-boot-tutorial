@@ -45,10 +45,10 @@ public class SampleRealm extends AuthorizingRealm {
         user.setUsername(username);
         user.setPassword(password);
 
-        boolean result = userService.login(user);
+       /* boolean result = userService.login(user);
         if(!result){
             throw new AccountException("账号不存在或密码错误");
-        }
+        }*/
 
         return new SimpleAuthenticationInfo(
             username,password,getName()

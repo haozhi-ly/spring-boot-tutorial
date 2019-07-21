@@ -1,6 +1,6 @@
 package com.ly.entity;
 
-public class RolePremission {
+public class RolePermission {
     private Long id;
 
     private Long roleId;

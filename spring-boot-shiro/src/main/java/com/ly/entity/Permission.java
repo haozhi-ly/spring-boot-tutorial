@@ -1,83 +1,55 @@
 package com.ly.entity;
 
-import java.io.Serializable;
+import lombok.Data;
 
-/**
- * <p>User: Zhang Kaitao
- * <p>Date: 14-1-28
- * <p>Version: 1.0
- */
-public class Permission implements Serializable {
+import java.util.List;
+
+@Data
+public class Permission {
     private Long id;
-    private String permission; //权限标识 程序中判断使用,如"user:create"
-    private String description; //权限描述,UI界面显示使用
-    private Boolean available = Boolean.FALSE; //是否可用,如果不可用将不会添加给用户
 
-    public Permission() {
-    }
+    private Long parentId;
 
-    public Permission(String permission, String description, Boolean available) {
-        this.permission = permission;
-        this.description = description;
-        this.available = available;
-    }
+    private String name;
 
-    public Long getId() {
-        return id;
-    }
+    private String url;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Integer type;
 
-    public String getPermission() {
-        return permission;
-    }
+    private Integer orderNum;
 
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
+    private Byte hasDelete;
 
-    public String getDescription() {
-        return description;
-    }
+    private String createTime;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    private Integer rid;
 
-    public Boolean getAvailable() {
-        return available;
-    }
+    private List<Permission> childrenPermission;
 
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Permission role = (Permission) o;
-
-        if (id != null ? !id.equals(role.id) : role.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+    /**
+     * 用于判断是否有权限
+     */
+    private Integer rpId;
+    /**
+     * 查询逗号分隔的权限主键
+     */
+    private String ids;
 
     @Override
     public String toString() {
-        return "Role{" +
+        return "Permission{" +
                 "id=" + id +
-                ", permission='" + permission + '\'' +
-                ", description='" + description + '\'' +
-                ", available=" + available +
-                '}';
+                ", parentId=" + parentId +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", type=" + type +
+                ", orderNum=" + orderNum +
+                ", hasDelete=" + hasDelete +
+                ", createTime='" + createTime + '\'' +
+                ", rid=" + rid +
+                ", childrenPermission=" + childrenPermission +
+                ", rpId=" + rpId +
+                ", / nids='" + ids + '\'' +
+                '}'+"\n";
     }
 }
