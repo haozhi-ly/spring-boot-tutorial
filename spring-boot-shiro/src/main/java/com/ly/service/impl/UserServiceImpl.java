@@ -1,21 +1,26 @@
-package com.ly.service.impl;/*
-    @author ${user}
-    @time 14:50
-*/
+package com.ly.service.impl;
 
+import com.ly.dao.UserMapper;
 import com.ly.entity.User;
 import com.ly.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+/**
+ *
+ */
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-   /* @Autowired
-    private UserDao userDao;*/
+   @Autowired
+    private UserMapper userMapper;
 
     @Override
-    public boolean login(User user) {
-        //return userDao.login(user);
-        return true;
+    public User login(User user) {
+        List<User> list = userMapper.selectAll(user);
+
+        return list != null && !list.isEmpty() ?  list.get(0) : null;
     }
 }

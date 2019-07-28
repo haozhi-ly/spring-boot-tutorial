@@ -1,8 +1,4 @@
-package com.ly.shiro.filter.realm;/*
-    @author ${user}
-    @time 14:55
-*/
-
+package com.ly.shiro.filter.realm;
 import com.ly.entity.User;
 import com.ly.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -10,6 +6,7 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import java.util.HashSet;
@@ -45,10 +42,13 @@ public class SampleRealm extends AuthorizingRealm {
         user.setUsername(username);
         user.setPassword(password);
 
-       /* boolean result = userService.login(user);
-        if(!result){
+        User result = userService.login(user);
+        if(result == null){
             throw new AccountException("账号不存在或密码错误");
-        }*/
+        }
+
+        Session session = SecurityUtils.getSubject().getSession();
+        session.setAttribute("loginUserInfo",result);
 
         return new SimpleAuthenticationInfo(
             username,password,getName()

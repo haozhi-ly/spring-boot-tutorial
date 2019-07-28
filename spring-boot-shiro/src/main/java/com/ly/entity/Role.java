@@ -15,6 +15,7 @@ public class Role {
 
     private Date createTime;
 
+    private Integer currentRid;
 
 
 

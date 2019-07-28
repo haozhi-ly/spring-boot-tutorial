@@ -2,8 +2,10 @@ package com.ly;
 
 import com.github.pagehelper.PageInfo;
 import com.ly.entity.Role;
+import com.ly.entity.User;
 import com.ly.service.PermissionService;
 import com.ly.service.RoleService;
+import com.ly.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class SpringBootPropertiesTest {
 	@Autowired
 	private PermissionService permissionService;
 
+	@Autowired
+	private UserService userService;
+
 	@Test
 	public void test(){
 		PageInfo<Role> list = roleService.page(null,1,10);
@@ -33,6 +38,16 @@ public class SpringBootPropertiesTest {
 		r.setId(1);
 		List<Map<String,Object>> permissionList = permissionService.getPermissionTreeToJson(r);
 		System.out.println(permissionList);
+	}
+
+	@Test
+	public void login(){
+		User user = new User();
+		user.setUsername("ly");
+		user.setPassword("a");
+
+		User result = userService.login(user);
+		System.out.println(result);
 	}
 
 	public static void main(String[] args){

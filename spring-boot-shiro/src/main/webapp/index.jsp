@@ -34,7 +34,7 @@
         $.jgrid.defaults.styleUI = 'Bootstrap';
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/ztree/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="js/ztree/jquery.ztree.all.js"></script>
     <style>
         body {
             padding-top: 20px;
@@ -191,6 +191,9 @@
 <script type="text/javascript">
 
     var setting = {
+        check: {
+            enable: true
+        },
         view: {
             selectedMulti: true
         },
@@ -206,7 +209,9 @@
 
 
 
-    $('#roleJqGrid').on('click', 'a[attr="link"]', function(e) {
+    $('#roleJqGrid').off('click', 'a[attr="link"]').on('click', 'a[attr="link"]', function(e) {
+        var roleId = $(this).attr("roleId");
+        getPermissionTree({id:roleId});
         $('#myModal').modal('show');
     });
 
@@ -261,15 +266,16 @@
     });
 
     $(document).ready(function(){
-        getPermissionTree();
+
     });
 
-    function getPermissionTree() {
+    function getPermissionTree(params) {
         $.ajax({
             async : true,    //表示请求是否异步处理
             type : "post",    //请求类型
             url : basePath+"/permission/getPermissionTree",
             dataType : "json",//返回的数据类型
+            data:params,
             success: function (data) {
                 $.fn.zTree.init($("#treeDemo"), setting, data);
             },
@@ -280,7 +286,7 @@
     };
 
     function operation_formatter(cellValue,grid, rows, state) {
-        var str = '<a attr="link">编辑权限</a>';
+        var str = '<a attr="link" roleId="'+rows.id+'">编辑权限</a>';
         return str;
     }
 

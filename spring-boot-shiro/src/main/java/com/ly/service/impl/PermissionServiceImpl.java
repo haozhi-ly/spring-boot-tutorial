@@ -26,7 +26,7 @@ public class PermissionServiceImpl implements PermissionService {
     public List<Map<String,Object>> getPermissionTreeToJson(Role role) {
         List<Permission> permissionList = getPermissionTree(role);
         Permission paramPermission = new Permission();
-        paramPermission.setRid(role.getId());
+        paramPermission.setRid(role.getCurrentRid());
         paramPermission.setIds("1,2,3");
         List<Permission> allocatePermissionList = permissionMapper.queryPermissionByPermission(paramPermission);
         boolean disable = (true ? allocatePermissionList == null || allocatePermissionList.size() != 3 : true);

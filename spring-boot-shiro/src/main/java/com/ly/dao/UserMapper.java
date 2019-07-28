@@ -10,7 +10,9 @@ public interface UserMapper {
 
     User selectByPrimaryKey(Long id);
 
-    List<User> selectAll();
+    List<User> selectAll(User user);
 
     int updateByPrimaryKey(User record);
+
+    boolean login(User user);
 }
