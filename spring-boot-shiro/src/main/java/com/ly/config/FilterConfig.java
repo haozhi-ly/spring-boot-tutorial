@@ -1,7 +1,4 @@
-package com.ly.config;/*
-    @author ${user}
-    @time 21:30
-*/
+package com.ly.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 @Configuration
-public class FilterConfig {
+public class FilterConfig{
     @Bean
     public FilterRegistrationBean shiroFilterRegisterBean(){
         FilterRegistrationBean registration = new FilterRegistrationBean();

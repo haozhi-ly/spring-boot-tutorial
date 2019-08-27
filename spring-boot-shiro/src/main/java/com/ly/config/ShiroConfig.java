@@ -1,7 +1,9 @@
 package com.ly.config;
 
 
+import com.ly.service.PermissionService;
 import com.ly.service.UserService;
+import com.ly.shiro.filter.PermissionFilter;
 import com.ly.shiro.filter.realm.SampleRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -12,6 +14,7 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +22,11 @@ import java.util.Map;
 public class ShiroConfig {
 
 
-    @Bean
-    public Realm realm(UserService userService){
+    @Bean("sampleRealm")
+    public Realm realm(UserService userService, PermissionService permissionService){
         SampleRealm sampleRealm = new SampleRealm();
         sampleRealm.setUserService(userService);
+        sampleRealm.setPermissionService(permissionService);
         return sampleRealm;
     }
 
@@ -35,24 +39,30 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager(Realm realm,SessionManager sessionManager){
+    public SecurityManager securityManager(Realm sampleRealm,SessionManager sessionManager){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(realm);
+        securityManager.setRealm(sampleRealm);
         securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
 
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager){
+    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager, PermissionFilter permissionFilter){
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(securityManager);
+
+
+        //oauth过滤
+        Map<String, Filter> filters = new HashMap<>();
+        filters.put("permission", permissionFilter);
+        factoryBean.setFilters(filters);
+
         Map<String,String> filterMap = new HashMap<>();
         filterMap.put("/login","anon");
-        filterMap.put("/index.jsp","anon");
         filterMap.put("/unauthorized.jsp","anon");
         filterMap.put("/login.jsp","anon");
         filterMap.put("/logout","logout");
-        filterMap.put("/**","user");
+        filterMap.put("/**","user,permission");
         factoryBean.setFilterChainDefinitionMap(filterMap);
         return factoryBean;
     }

@@ -44,6 +44,10 @@
         .navbar {
             margin-bottom: 20px;
         }
+        .hide{
+            display: none;
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -114,19 +118,32 @@
                 </div>
                 <div class="modal-body">
 
-                    <form class="form-horizontal" id="addPremisionForm" >
+                    <form class="form-horizontal" id="addPremisionForm" action="${pageContext.request.contextPath}/permission/addPermission">
+
+                        <button type="submit" class="hide" id="addPermisionNameButton"></button>
+                        <input type="hidden" id="parentIdAdd" name="parentId" class="hide">
 
                         <div class="form-group">
-                            <label for="parentName" class="col-sm-2 control-label">父菜单名</label>
+                            <label for="parentNameAdd" class="col-sm-2 control-label">父菜单名</label>
                             <div class="col-sm-10">
-                                <input type="text"  class="form-control" id="parentName" placeholder="父菜单名">
+                                <input type="text"  class="form-control" readonly  id="parentNameAdd" placeholder="父菜单名">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="permissionName" class="col-sm-2 control-label">权限名</label>
+                            <label for="permissionName" class="col-sm-2 control-label">菜单类型</label>
                             <div class="col-sm-10">
-                                <input type="text" name="name" class="form-control" id="permissionName" placeholder="权限名">
+                                <select id="addType" name="type" class="form-control">
+                                    <option value="0">目录</option>
+                                    <option value="1">功能按钮</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="permissionName" class="col-sm-2 control-label">菜单名</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" class="form-control" id="permissionName" placeholder="菜单名">
                             </div>
                         </div>
 
@@ -145,7 +162,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
-                    <button type="button" class="btn btn-primary" onclick="addPermission">
+                    <button type="button" class="btn btn-primary" onclick="addPermission()">
                         保存
                     </button>
                 </div>
@@ -166,16 +183,17 @@
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        模态框（Modal）标题
+                        角色权限
                     </h4>
                 </div>
                 <div class="modal-body">
+                    <input id="currentRoleId" type="hidden" class="hide" value="">
                     <div class="ztree" id="treeDemo"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#theSecondModal">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" onclick="allocatePermission()">
                         提交更改
                     </button>
                 </div>
@@ -195,22 +213,108 @@
             enable: true
         },
         view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
             selectedMulti: true
+        },
+        edit: {
+            enable: true,
+            editNameSelectAll: true,
+            //showRemoveBtn: showRemoveBtn,
+            showRenameBtn: showRenameBtn
+        },
+        callback: {
+            beforeEditName: beforeEditName,
+            //beforeRemove: beforeRemove,
+            //beforeRename: beforeRename,
+            //onRemove: onRemove,
+            //onRename: onRename
         },
         data: {
             simpleData: {
                 enable: true
             }
-        },
-        callback: {
-
         }
     };
 
+    function beforeEditName(treeId, treeNode) {
+        className = (className === "dark" ? "":"dark");
+        showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.selectNode(treeNode);
+        setTimeout(function() {
+            if (confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？")) {
+                setTimeout(function() {
+                    zTree.editName(treeNode);
+                }, 0);
+            }
+        }, 0);
+        return false;
+    };
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var parentMenuName = treeNode.name;
+            $("#parentNameAdd").val(parentMenuName);
+            $("#parentIdAdd").val(treeNode.id);
+
+           $("#theSecondModal").modal('show');
+            return false;
+        });
+    };
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+
+    function showRenameBtn(treeId, treeNode) {
+        return true;
+    }
+
+    function addPermission(){
+        $("#addPermisionNameButton").trigger('click');
+    }
+
+    //分配权限
+    function allocatePermission(){
+        var roleId = $("#currentRoleId").val();
+        var pidList = [];
+
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        var nodes = treeObj.getCheckedNodes();
+
+        for(var i=0;i<nodes.length;i++){
+            pidList.push(nodes[i].id);
+        }
+        $.ajax({
+            async : true,    //表示请求是否异步处理
+            type : "post",    //请求类型
+            url : basePath+"/permission/allocatePermission",
+            dataType : "json",//返回的数据类型
+            data:{
+                roleId : roleId,
+                pidList:pidList
+            },
+            success: function (data) {
+                $('#myModal').modal('hide');
+            },
+            error:function (data) {
+                alert(data);
+            }
+        });
+
+    }
 
 
     $('#roleJqGrid').off('click', 'a[attr="link"]').on('click', 'a[attr="link"]', function(e) {
         var roleId = $(this).attr("roleId");
+        $("#currentRoleId").val(roleId);
         getPermissionTree({id:roleId});
         $('#myModal').modal('show');
     });

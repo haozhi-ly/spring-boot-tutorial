@@ -15,16 +15,18 @@
     delete from premission
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ly.entity.Permission" >
-    insert into premission (id, parent_id, `name`, 
+  <!--keyProperty + useGeneratedKeys 类似与mysql这类自增主键，会自动设置他的值 -->
+  <insert id="addPermission" parameterType="com.ly.entity.Permission" useGeneratedKeys="true" keyProperty="id"
+      >
+    insert into permission (parent_id, `name`,
       url, `type`, order_num, 
       has_delete, create_time)
-    values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+    values (#{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
       #{url,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{orderNum,jdbcType=INTEGER}, 
       #{hasDelete,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.ly.entity.Permission" >
-    update premission
+    update permission
     set parent_id = #{parentId,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
@@ -36,13 +38,38 @@
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select id, parent_id, `name`, url, `type`, order_num, has_delete, create_time
-    from premission
+    from permission
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select id, parent_id, `name`, url, `type`, order_num, has_delete, create_time
-    from premission
+    select distinct id, parent_id, `name`, url, `type`, order_num, has_delete, create_time
+    from permission
+    <where>
+        <if test="roles != null">
+
+            <foreach collection="roles" separator="," open="(" close=")" item="role">
+                #{role.id}
+            </foreach>
+        </if>
+    </where>
   </select>
+
+  <select id="selectPermission" resultMap="BaseResultMap" >
+    select distinct p.*
+    from permission p,role_permission rp
+    <where>
+      p.id = rp.pid
+
+      <if test="roleIds != null">
+        and
+        rp.role_id in
+        <foreach collection="roleIds" separator="," open="(" close=")" item="roleId">
+          #{roleId}
+        </foreach>
+      </if>
+    </where>
+  </select>
+
 
 
   <resultMap id="getPermissionTreeMap" type="com.ly.entity.Permission" >
@@ -82,5 +109,17 @@
     </where>
   </select>
 
+    <delete id="clearPermissionByRoleId">
+        delete from role_permission where role_id = #{roleId}
+    </delete>
+
+    <insert id="allocatePermission" >
+        insert into role_permission (role_id, pid)
+        values
+        <foreach collection="pidList" item="pid"  separator=",">
+          (#{roleId},#{pid})
+        </foreach>
+
+    </insert>
 
 </mapper>

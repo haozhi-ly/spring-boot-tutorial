@@ -1,6 +1,7 @@
 package com.ly;
 
 import com.github.pagehelper.PageInfo;
+import com.ly.entity.Permission;
 import com.ly.entity.Role;
 import com.ly.entity.User;
 import com.ly.service.PermissionService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,18 @@ public class SpringBootPropertiesTest {
 	}
 
 	@Test
+	public void selectPermission(){
+		Permission permission = new Permission();
+		List<Integer> roleIds = new ArrayList<>();
+		roleIds.add(1);
+		roleIds.add(2);
+
+		permission.setRoleIds(roleIds);
+		List<Permission> permissionList = permissionService.selectPermission(permission);
+		System.out.println(permissionList);
+	}
+
+	@Test
 	public void login(){
 		User user = new User();
 		user.setUsername("ly");
@@ -48,6 +62,14 @@ public class SpringBootPropertiesTest {
 
 		User result = userService.login(user);
 		System.out.println(result);
+	}
+
+	@Test
+	public void forTest(){
+		List<Permission> list = null;
+		for(Permission p : list){
+			System.out.println(p.toString());
+		}
 	}
 
 	public static void main(String[] args){

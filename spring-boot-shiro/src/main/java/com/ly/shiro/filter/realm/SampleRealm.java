@@ -1,5 +1,9 @@
 package com.ly.shiro.filter.realm;
+
+import com.ly.entity.Permission;
+import com.ly.entity.Role;
 import com.ly.entity.User;
+import com.ly.service.PermissionService;
 import com.ly.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -9,25 +13,47 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SampleRealm extends AuthorizingRealm {
 
     private UserService userService;
 
+    private PermissionService permissionService;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        if(username.equals("zhang")){
+
+        Session session = SecurityUtils.getSubject().getSession();
+        User user = (User) session.getAttribute("loginUserInfo");
+
+        if(user != null){
             Set<String> roleSets = new HashSet<>();
-            roleSets.add("admin");
+            List<Integer> roleIds = new ArrayList<>();
+            if(user.getRoleList() != null){
+                for(Role role:user.getRoleList()){
+                    roleSets.add(role.getRoleName());
+                    roleIds.add(role.getId());
+                }
+            }
             simpleAuthorizationInfo.setRoles(roleSets);
-            Set<String> premissionsSet = new HashSet<>();
-            premissionsSet.add("user:*");
-            premissionsSet.add("menu:*");
-            simpleAuthorizationInfo.setStringPermissions(premissionsSet);
+
+            Permission permission = new Permission();
+            permission.setRoleIds(roleIds);
+            List<Permission> permissionList = permissionService.selectPermission(permission);
+            Set<String> permissionSet = new HashSet<>();
+            if(permissionList != null){
+                for(Permission p:permissionList){
+                    permissionSet.add(p.getUrl());
+                }
+            }
+            simpleAuthorizationInfo.setStringPermissions(permissionSet);
+
         }
 
         return simpleAuthorizationInfo;
@@ -85,5 +111,13 @@ public class SampleRealm extends AuthorizingRealm {
     public void clearAllCache() {
         clearAllCachedAuthenticationInfo();
         clearAllCachedAuthorizationInfo();
+    }
+
+    public PermissionService getPermissionService() {
+        return permissionService;
+    }
+
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
     }
 }

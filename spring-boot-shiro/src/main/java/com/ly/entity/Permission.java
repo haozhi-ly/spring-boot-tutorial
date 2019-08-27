@@ -26,6 +26,8 @@ public class Permission {
 
     private List<Permission> childrenPermission;
 
+    private List<Integer> roleIds;
+
     /**
      * 用于判断是否有权限
      */
