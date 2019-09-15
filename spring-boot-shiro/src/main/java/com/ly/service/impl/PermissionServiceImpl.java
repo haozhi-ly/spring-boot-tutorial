@@ -4,6 +4,8 @@ import com.ly.dao.PermissionMapper;
 import com.ly.entity.Permission;
 import com.ly.entity.Role;
 import com.ly.service.PermissionService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +110,13 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public int clearPermissionByRoleId(int roleId) {
         return 0;
+    }
+
+    @Override
+    public boolean checkPermissionIsExist(String permissionUrl) {
+        Subject subject = SecurityUtils.getSubject();
+        boolean result = false;
+        return subject.isPermitted(permissionUrl);
     }
 
 

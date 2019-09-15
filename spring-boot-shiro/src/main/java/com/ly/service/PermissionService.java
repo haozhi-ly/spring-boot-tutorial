@@ -20,4 +20,6 @@ public interface PermissionService {
     int allocatePermission(Integer roleId, List<Integer> pidList);
 
     int clearPermissionByRoleId(int roleId);
+
+    boolean checkPermissionIsExist(String permissionUrl);
 }

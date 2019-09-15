@@ -19,8 +19,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
         CacheManager cacheManager =realm.getCacheManager();
         if(cacheManager != null){
             realm.clearAllCache();
-        }else{
-            throw new RuntimeException("拦截测试");
         }
 
         return true;

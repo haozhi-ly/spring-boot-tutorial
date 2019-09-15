@@ -47,6 +47,12 @@ public class PermissionController {
         return result;
     }
 
+    @ResponseBody
+    @RequestMapping("/checkPermissionIsExist")
+    public boolean checkPermissionIsExist(String permissionUrl){
+        return permissionService.checkPermissionIsExist(permissionUrl);
+    }
+
 
 
 

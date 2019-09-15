@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("com.ly.dao")
 public class DbConfig {
     /*@Bean
-    @ConfigurationProperties(prefix="spring.datasource.druid")
+    @ConfigurationProperties(prefix="spring.datasource")
     public DataSource datasource(){
         DruidDataSource dataSource = new DruidDataSource();
         return dataSource;

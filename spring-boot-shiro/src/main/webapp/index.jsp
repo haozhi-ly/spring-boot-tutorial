@@ -71,8 +71,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">用户管理</a></li>
-                    <li><a href="#">角色管理</a></li>
+                    <li class="active"  showDivId="userListDiv" grid="userJqGrid"  permissionUrl="user:select"><a href="#">用户管理</a></li>
+                    <li showDivId="roleListDiv" grid="roleJqGrid"  permissionUrl="role:select"><a href="#">角色管理</a></li>
                     <li class="dropdown">
 
                     </li>
@@ -84,7 +84,12 @@
         </div><!--/.container-fluid -->
     </nav>
 
-    <div class="row">
+    <div class="row" id="userListDiv" tag="list">
+        <table id="userJqGrid"></table>
+        <div id="userJqGridPager"></div>
+    </div>
+
+    <div class="row hide" id="roleListDiv" tag="list">
         <table id="roleJqGrid"></table>
         <div id="jqGridPager"></div>
     </div>
@@ -171,9 +176,6 @@
     </div>
 
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        开始演示模态框
-    </button>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -255,6 +257,12 @@
     var newCount = 1;
     function addHoverDom(treeId, treeNode) {
         var sObj = $("#" + treeNode.tId + "_span");
+
+        if(!treeNode.isParent){
+            return;
+        }
+
+
         if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
         var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
             + "' title='add node' onfocus='this.blur();'></span>";
@@ -319,6 +327,17 @@
         $('#myModal').modal('show');
     });
 
+
+    $('#navbar').off('click', 'ul li').on('click', 'ul li', function(e) {
+        var showDivId = $(this).attr("showDivId");
+        $(this).siblings(".active").removeClass('active');
+        $(this).addClass('active');
+        $("div[tag='list']").addClass('hide');
+        $("#"+showDivId).removeClass('hide');
+        var gridId = $(this).attr("grid");
+        jQuery("#"+gridId).trigger("reloadGrid");
+    });
+
    /*
 
     $('#myModal').on('show.bs.modal', function () {
@@ -333,13 +352,13 @@
     $(function () {
         var a = "test";
         $("#roleJqGrid").jqGrid({
-            height:434,autowidth:true, shrinkToFit:true,/*  autoScroll: false, *//*forceFit: true, */
+            height:434,/*  autoScroll: false, *//*forceFit: true, */
             colNames:["id","角色名称","备注","创建时间","操作"],
-            colModel:[{name:"id",index:"id",autowidth:true,align:"center"},
-                {name:"roleName",index:"roleName",autowidth:true,align:"center"},
-                {name:"remark",index:"remark",autowidth:true,align:"center"},
-                {name:"createTime",index:"createTime",autowidth:true,align:"center"},
-                {name:"operation",index:"operation",autowidth:true,align:"center",
+            colModel:[{name:"id",index:"id",width:100,align:"center"},
+                {name:"roleName",index:"roleName",width:250,align:"center"},
+                {name:"remark",index:"remark",width:250,align:"center"},
+                {name:"createTime",index:"createTime",width:250,align:"center"},
+                {name:"operation",index:"operation",width:250,align:"center",
                     formatter: operation_formatter }
             ],
             pager:"#jqGridPager",
@@ -366,11 +385,45 @@
             },*/
         });
 
+        $("#userJqGrid").jqGrid({
+            height:434,/*  autoScroll: false, *//*forceFit: true, */
+            colNames:["id","用户名称","创建时间","操作"],
+            colModel:[{name:"id",index:"id",width:100,align:"center"},
+                {name:"username",index:"roleName",width:250,align:"center"},
+                {name:"createTime",index:"createTime",width:250,align:"center"},
+                {name:"operation",index:"operation",width:250,align:"center"
+                    }
+            ],
+            pager:"#userJqGridPager",
+            viewrecords:true,
+            hidegrid:false,
+            url:basePath+"/user/page",
+            datatype:'json',
+            rownumbers: true,
+            rowNum : 10,
+            rowList : [ 10, 15,30 ],
+            jsonReader: {
+                root: "dataList",
+                page: "currPage",
+                total: "totalPages",          //   很重要 定义了 后台分页参数的名字。
+                records: "totalCount"
+            },
+            gridComplete: function () {     // 数据加载完成后 添加 采购按钮
+
+            }
+            /*prmNames: {
+                page: "page",
+                rows: "limit",
+                order: "order"
+            },*/
+        });
+
+
 
     });
 
     $(document).ready(function(){
-
+        checkPermission();
     });
 
     function getPermissionTree(params) {
@@ -392,6 +445,32 @@
     function operation_formatter(cellValue,grid, rows, state) {
         var str = '<a attr="link" roleId="'+rows.id+'">编辑权限</a>';
         return str;
+    }
+    
+    function checkPermission() {
+        $("[permissionUrl]").each(function(){
+
+            let jqObj = $(this);
+            let permissionUrl = jqObj.attr("permissionUrl");
+
+            $.ajax({
+                async : true,    //表示请求是否异步处理
+                type : "post",    //请求类型
+                url : basePath+"/permission/checkPermissionIsExist",
+                dataType : "json",//返回的数据类型
+                data:{
+                    permissionUrl:permissionUrl
+                },
+                success: function (data) {
+                    if(!data){
+                        jqObj.addClass('hide');
+                    }
+                },
+                error:function (data) {
+                    alert(data.result);
+                }
+            });
+        });
     }
 
 
