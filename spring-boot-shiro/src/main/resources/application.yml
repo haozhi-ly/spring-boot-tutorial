@@ -22,7 +22,10 @@ spring:
         maxPoolPreparedStatementPerConnectionSize: 20
         maxOpenPreparedStatements: 20
     mvc:
-      static-path-pattern: /**
+      #static-path-pattern: /**
+      view:
+          prefix: /
+          suffix: .jsp
 mybatis:
     mapper-locations: classpath:mapper/*.xml
     type-aliases-package: com.ly.entity  # 注意：对应实体类的路径
