@@ -13,20 +13,20 @@
 <%--
     <link rel="stylesheet" href="css/navbar.css">
 --%>
-    <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.js"></script>
 <%--
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
 --%>
 
 
     <!-- We support more than 40 localizations -->
-    <script type="text/javascript" src="js/trirand/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/trirand/i18n/grid.locale-en.js"></script>
     <!-- This is the Javascript file of jqGrid -->
-    <script type="text/javascript" src="js/trirand/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/trirand/jquery.jqGrid.min.js"></script>
     <!-- A link to a Boostrap  and jqGrid Bootstrap CSS siles-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet"  href="css/trirand/ui.jqgrid-bootstrap.css" />
-    <link rel="stylesheet"  href="css/ztree/zTreeStyle.css" />
+    <link rel="stylesheet"  href="${pageContext.request.contextPath}/css/trirand/ui.jqgrid-bootstrap.css" />
+    <link rel="stylesheet"  href="${pageContext.request.contextPath}/css/ztree/zTreeStyle.css" />
 
     <script>
         $.jgrid.defaults.width = 780;
@@ -34,7 +34,7 @@
         $.jgrid.defaults.styleUI = 'Bootstrap';
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/ztree/jquery.ztree.all.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/ztree/jquery.ztree.all.js"></script>
     <style>
         body {
             padding-top: 20px;
