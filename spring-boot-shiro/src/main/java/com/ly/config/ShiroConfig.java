@@ -5,6 +5,8 @@ import com.ly.service.PermissionService;
 import com.ly.service.UserService;
 import com.ly.shiro.filter.PermissionFilter;
 import com.ly.shiro.filter.realm.SampleRealm;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.SessionManager;
@@ -21,12 +23,19 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+    private final String AUTHENTICATION_CACHE_NAME = "authenticationCache";
+    private final String AUTHORIZATION_CACHE_NAME = "authenticationCache";
 
     @Bean("sampleRealm")
     public Realm realm(UserService userService, PermissionService permissionService){
         SampleRealm sampleRealm = new SampleRealm();
         sampleRealm.setUserService(userService);
         sampleRealm.setPermissionService(permissionService);
+        sampleRealm.setCachingEnabled(true);
+        sampleRealm.setAuthenticationCachingEnabled(true);
+        sampleRealm.setAuthenticationCacheName(AUTHENTICATION_CACHE_NAME);
+        sampleRealm.setAuthorizationCachingEnabled(true);
+        sampleRealm.setAuthorizationCacheName(AUTHORIZATION_CACHE_NAME);
         return sampleRealm;
     }
 
@@ -39,10 +48,18 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager(Realm sampleRealm,SessionManager sessionManager){
+    public CacheManager cacheManager(){
+        EhCacheManager cacheManager = new EhCacheManager();
+        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+        return  cacheManager;
+    }
+
+    @Bean
+    public SecurityManager securityManager(Realm sampleRealm,SessionManager sessionManager,CacheManager cacheManager){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(sampleRealm);
         securityManager.setSessionManager(sessionManager);
+        securityManager.setCacheManager(cacheManager);
         return securityManager;
     }
 
