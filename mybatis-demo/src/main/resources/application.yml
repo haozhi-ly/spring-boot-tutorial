@@ -21,6 +21,9 @@ spring:
         poolPreparedStatements: true
         maxPoolPreparedStatementPerConnectionSize: 20
         maxOpenPreparedStatements: 20
+    redis:
+        host: localhost
+        port: 6379
 mybatis:
     mapper-locations: classpath:mapper/*.xml
     type-aliases-package: com.ly.entity  # 注意：对应实体类的路径
@@ -31,5 +34,6 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
 
 
