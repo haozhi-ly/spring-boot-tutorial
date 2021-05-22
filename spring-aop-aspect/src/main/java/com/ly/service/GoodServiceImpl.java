@@ -17,7 +17,8 @@ import java.util.List;
  * @Author sky_
  * @Date 2019/6/7
  **/
-@Service("goodService")
+//@Lazy
+//@Service("goodService")
 public class GoodServiceImpl implements GoodService{
     /**
      * 商品mapper

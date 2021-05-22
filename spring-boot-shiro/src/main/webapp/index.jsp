@@ -203,6 +203,10 @@
         </div><!-- /.modal -->
     </div>
 
+    <div>
+        <button class="btn-default" onclick="testJson()">测试</button>
+    </div>
+
 
 </div>
 
@@ -210,6 +214,22 @@
 </body>
 <script type="text/javascript">
 
+
+
+    function testJson(){
+        $.ajax({
+            async : true,    //表示请求是否异步处理
+            type : "post",    //请求类型
+            url : basePath+"/jsonTest",
+            dataType : "json",//返回的数据类型
+            success: function (data) {
+               cnsole.info(data);
+            },
+            error:function (data) {
+                alert(data);
+            }
+        });
+    }
     var setting = {
         check: {
             enable: true

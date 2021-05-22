@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.dao.test.TblTestMapper" >
+  <resultMap id="BaseResultMap" type="com.ly.entity.TblTest" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tname" property="tname" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_test
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ly.entity.TblTest" useGeneratedKeys="true">
+    insert into tbl_test (tname,address,create_time
+      )
+    values (#{tname,jdbcType=VARCHAR},
+     #{address},
+     #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ly.entity.TblTest" >
+    update tbl_test
+    set tname = #{tname,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, tname, create_time,address
+    from tbl_test
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.ly.entity.TblTest">
+    select id, tname, create_time,address
+    from tbl_test
+    where address = #{address,jdbcType=VARCHAR}
+     and create_time = #{createTime}
+  </select>
+</mapper>

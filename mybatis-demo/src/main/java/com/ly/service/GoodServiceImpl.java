@@ -5,7 +5,7 @@ package com.ly.service;/*
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ly.dao.GoodMapper;
+import com.ly.dao.shiro.GoodMapper;
 import com.ly.entity.Good;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

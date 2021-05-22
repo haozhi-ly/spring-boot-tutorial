@@ -1,4 +1,4 @@
-package com.ly.dao;
+package com.ly.dao.shiro;
 
 import com.ly.entity.Good;
 import java.util.List;

@@ -1,11 +1,30 @@
 package com.ly.config;
 
-import org.mybatis.spring.annotation.MapperScan;
+//import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
+@Lazy
 @Configuration
-@MapperScan("com.ly.dao")
+//@MapperScan("com.ly.dao")
 public class SpringConfig {
+
+
+
+
+
+
+
+    /*@Bean
+    @Primary
+    @ConfigurationProperties(prefix="spring.datasource.druid")
+    public DataSource dataSource(){
+        DruidDataSource dataSource = new DruidDataSource();
+        return dataSource;
+    }*/
+
+
+
 	/*@Value("${spring.datasource.url}")
 	private String url;
 	

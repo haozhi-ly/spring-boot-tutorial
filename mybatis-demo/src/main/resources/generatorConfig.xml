@@ -27,7 +27,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="${jdbc.driver}"
-                        connectionURL="${db.url}"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/world?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false"
                         userId="${db.username}"
                         password="${db.password}">
         </jdbcConnection>
@@ -48,7 +48,7 @@
         <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}"
                              type="XMLMAPPER"/>
         <!--将Exmaple 查询关闭，需要的话可以打开-->
-        <table tableName="%" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="tbl_test" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="true" selectByExampleQueryId="true"></table>
     </context>
 </generatorConfiguration>

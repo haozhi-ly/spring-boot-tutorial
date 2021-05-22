@@ -1,0 +1,4 @@
+debug: true
+es:
+    hosts: http://169.254.184.182:9200
+

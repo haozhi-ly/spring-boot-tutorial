@@ -1,11 +1,13 @@
 package com.ly.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 @Builder
-@Data
+@Setter
+@Getter
+@ToString
+@AllArgsConstructor
 public class Good {
     private Integer id;
 
@@ -19,5 +21,6 @@ public class Good {
 
     private Date createTime;
 
-
+    public Good() {
+    }
 }
