@@ -1,4 +1,6 @@
 package com.ly;
+
+import com.common.service.UserService;
 import com.ly.controller.HelloController;
 import com.ly.service.GoodService;
 import com.ly.service.ImportTestService;
@@ -17,14 +19,15 @@ public class  SpringBootPropertiesTest {
 	@Autowired
 	private HelloController controller;
 
-	@Autowired
+	//@Autowired
 	private ImportTestService importTestService;
+
+	@Autowired
+	UserService userService;
 
 	@Test
 	public void helloController(){
-		//System.out.println(goodService);
-		System.out.println(controller.hello1("yes"));
-		importTestService.importTest();
+		userService.info();
 	}
 
 

@@ -38,11 +38,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
-        <relativePath/>
+        <version>2.5.1</version>
     </parent>
 
     <dependencies>
+
+
 
             <dependency>
                 <groupId>io.protostuff</groupId>
@@ -85,10 +86,15 @@
             <version>1.2.58</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
             <version>1.3.2</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
 
 
@@ -105,12 +111,18 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>29.0-jre</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
 
     <build>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+        <!--<pluginManagement>--><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -146,7 +158,7 @@
                         <dependency>
                             <groupId>org.mybatis.generator</groupId>
                             <artifactId>mybatis-generator-core</artifactId>
-                            <version>1.3.1</version>
+                            <version>1.3.5</version>
                         </dependency>
 
                         <dependency>
@@ -160,7 +172,9 @@
 
 
             </plugins>
+<!--
         </pluginManagement>
+-->
 
 
     </build>

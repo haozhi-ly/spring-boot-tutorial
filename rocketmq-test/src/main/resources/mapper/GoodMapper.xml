@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ly.dao.GoodMapper" >
+  <resultMap id="BaseResultMap" type="com.ly.entity.Good" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="gname" property="gname" jdbcType="VARCHAR" />
+    <result column="serialNumber" property="serialnumber" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="stock_number" property="stockNumber" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from good
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ly.entity.Good" >
+    insert into good (id, gname, serialNumber, 
+      price, stock_number, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{gname,jdbcType=VARCHAR}, #{serialnumber,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DOUBLE}, #{stockNumber,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ly.entity.Good" >
+    update good
+    set gname = #{gname,jdbcType=VARCHAR},
+      serialNumber = #{serialnumber,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      stock_number = #{stockNumber,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, gname, serialNumber, price, stock_number, create_time
+    from good
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, gname, serialNumber, price, stock_number, create_time
+    from good
+  </select>
+</mapper>

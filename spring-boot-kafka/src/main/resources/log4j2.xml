@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %C{1} (%F:%L) - %m%n"/>
+        </Console>
+        <File name="fileLog" fileName="logs/demo.log">
+        	<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %C{1} (%F:%L) - %m%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+    	<!-- 设置包的级别 -->
+        <Logger name="com" level="warn"/>
+        <!-- 总日志级别 -->
+        <Root level="warn">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="fileLog"/>
+        </Root>
+    </Loggers>
+</Configuration>

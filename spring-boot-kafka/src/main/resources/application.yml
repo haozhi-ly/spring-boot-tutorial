@@ -1,0 +1,11 @@
+spring:
+  kafka:
+    bootstrap-servers: 192.168.234.8:9092
+    consumer:
+      max-poll-records: 1
+      enable-auto-commit: false
+       #consumer.c
+    listener:
+      type: batch
+      ack-mode: manual
+      concurrency: 3
