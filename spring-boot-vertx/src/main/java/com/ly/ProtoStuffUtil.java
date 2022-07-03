@@ -24,6 +24,14 @@ public class ProtoStuffUtil {
 
     static{
         WRAPPER_CLASS_SET.add(List.class);
+        WRAPPER_CLASS_SET.add(Integer.class);
+        WRAPPER_CLASS_SET.add(Boolean.class);
+        WRAPPER_CLASS_SET.add(Character.class);
+        WRAPPER_CLASS_SET.add(Double.class);
+        WRAPPER_CLASS_SET.add(int.class);
+        WRAPPER_CLASS_SET.add(boolean.class);
+        WRAPPER_CLASS_SET.add(char.class);
+        WRAPPER_CLASS_SET.add(double.class);
         WRAPPER_CLASS_SET.add(ArrayList.class);
         WRAPPER_CLASS_SET.add(Set.class);
         WRAPPER_CLASS_SET.add(Map.class);
@@ -67,6 +75,24 @@ public class ProtoStuffUtil {
         }else{
             Schema<T> schema = getSchema(clazz);
             T obj = null;
+            try {
+                obj = clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                return null;
+            }
+            ProtostuffIOUtil.mergeFrom(bytes, obj, schema);
+            return obj;
+        }
+    }
+
+    public static Object deserializerToObj(byte[] bytes,Class clazz)  {
+        if(WRAPPER_CLASS_SET.contains(clazz)){
+            SerializeDeserializeWrapperObj obj = new SerializeDeserializeWrapperObj<>();
+            ProtostuffIOUtil.mergeFrom(bytes, obj, WRAPPER_SCHEMA);
+            return obj.getData();
+        }else{
+            Schema schema = RuntimeSchema.createFrom(clazz);
+            Object obj = null;
             try {
                 obj = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {

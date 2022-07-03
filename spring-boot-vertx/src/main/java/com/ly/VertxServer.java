@@ -1,7 +1,6 @@
 package com.ly;
 
 import com.ly.entity.Good;
-import com.ly.session.RedisStore;
 import com.ly.session.SessionEntity;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -10,8 +9,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.Session;
 import io.vertx.ext.web.handler.SessionHandler;
-import io.vertx.ext.web.sstore.SessionStore;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.redis.RedisSessionStore;
+import io.vertx.redis.client.Redis;
+import io.vertx.redis.client.RedisOptions;
+import io.vertx.redis.client.impl.RedisClient;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class VertxServer implements ApplicationListener<ContextRefreshedEvent> {
-    @Autowired
+    //@Autowired
     private RedisTemplate<String,Object> redisTemplate;
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -38,11 +40,18 @@ public class VertxServer implements ApplicationListener<ContextRefreshedEvent> {
             options.setTcpKeepAlive(true);
             HttpServer server = vertx.createHttpServer(options);
             Router router = Router.router(vertx);
-            SessionStore sessionStore = RedisStore.create(vertx,this.redisTemplate);
+            //SessionStore sessionStore = RedisStore.create(vertx,this.redisTemplate);
+            RedisOptions redisOptions = new RedisOptions();
+            redisOptions.addConnectionString("redis://192.168.72.8:6379");
+
+            Redis redis = new RedisClient(vertx,redisOptions);
+            //ReactiveRedisSessionStore sessionStore = RedisStore.create(vertx,redis);
+            RedisSessionStore redisSessionStore = RedisSessionStore.create(vertx,redis);
 
             //SessionStore sessionStore = SessionStore.create(vertx);
+            router.routeWithRegex("/static.*").handler(StaticHandler.create());
             router.routeWithRegex(".*service.*")
-                    .handler(SessionHandler.create(sessionStore)).handler(ctx->{
+                    .handler(SessionHandler.create(redisSessionStore)).handler(ctx->{
                         if(ctx.request().path().contains("initSession")){
                             ctx.request().response().setStatusCode(401)
                             .putHeader("Content-Type","application/json").end((new JsonObject().put("msg","illegal request").encode()));

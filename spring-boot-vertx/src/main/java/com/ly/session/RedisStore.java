@@ -2,6 +2,7 @@ package com.ly.session;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.redis.client.Redis;
 import org.springframework.data.redis.core.RedisTemplate;
 
 public interface RedisStore {
@@ -58,6 +59,33 @@ public interface RedisStore {
         store.init(vertx, new JsonObject()
                 .put("reaperInterval", reaperInterval)
                 .put("mapName", sessionMapName));
+        return store;
+    }
+
+    long DEFAULT_RETRY_TIMEOUT_MS = 2 * 1000;
+
+    /**
+     * Creates a RedisSessionStore with the default retry TO.
+     *
+     * @param vertx   a Vert.x instance
+     * @param redis A Redis client
+     * @return the store
+     */
+    static ReactiveRedisSessionStore create(Vertx vertx, Redis redis) {
+        return create(vertx, DEFAULT_RETRY_TIMEOUT_MS, redis);
+    }
+
+    /**
+     * Creates a RedisSessionStore with the given retry TO.
+     *
+     * @param vertx          a Vert.x instance
+     * @param redis        The given options to establish the connection
+     * @param retryTimeoutMs The time between two consecutive tries
+     * @return the store
+     */
+    static ReactiveRedisSessionStore create(Vertx vertx, long retryTimeoutMs, Redis redis) {
+        ReactiveRedisSessionStore store = new ReactiveRedisSessionStore();
+        store.init(vertx, retryTimeoutMs, redis);
         return store;
     }
 }

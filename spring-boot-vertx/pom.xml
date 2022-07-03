@@ -19,11 +19,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.vertx/vertx-web-sstore-redis -->
-        <!--<dependency>
+        <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-sstore-redis</artifactId>
             <version>4.1.4</version>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
